@@ -22,48 +22,36 @@ function updatePrice(inputId, priceId, subtotalId, taxId, totalId) {
     var unitPrice = (priceId === 'price1') ? 1200 : 1500; // Adjust this value to the actual unit price
     var totalPrice = quantity * unitPrice;
     priceElement.textContent = "$" + totalPrice;
-    
-    // Update subtotal
-    var subtotalElement = document.getElementById(subtotalId);
-    var subtotal = parseInt(subtotalElement.textContent.replace("$", ""));
-    var previousTotal = isNaN(subtotal) ? 0 : subtotal;
-    var newTotal = previousTotal + totalPrice;
-    subtotalElement.textContent = "$" + newTotal;
-    
-    // Update tax
-    var taxElement = document.getElementById(taxId);
-    var tax = newTotal * 0.05;
-    taxElement.textContent = "$" + tax.toFixed(2);
-    
-    // Update total
-    var totalElement = document.getElementById(totalId);
-    var total = newTotal + tax;
-    totalElement.textContent = "$" + total.toFixed(2);
+
+    updateSubtotal(subtotalId);
+    calculateTax(subtotalId, taxId, totalId);
 }
 
 function removeProduct(productId, subtotalId, taxId, totalId) {
     var productElement = document.getElementById(productId);
     productElement.parentNode.removeChild(productElement);
-    // Recalculate subtotal, tax, and total
-    calculateTotal(subtotalId, taxId, totalId);
+
+    updateSubtotal(subtotalId);
+    calculateTax(subtotalId, taxId, totalId);
 }
 
-function calculateTotal(subtotalId, taxId, totalId) {
-    var subtotalElement = document.getElementById(subtotalId);
+function updateSubtotal(subtotalId) {
     var subtotal = 0;
     var productContainers = document.querySelectorAll('.product-container');
     productContainers.forEach(function(container) {
         var priceElement = container.querySelector('.productPrice');
-        var price = parseInt(priceElement.textContent.replace("$", ""));
+        var price = parseFloat(priceElement.textContent.replace('$', ''));
         subtotal += price;
     });
-    subtotalElement.textContent = "$" + subtotal;
+    document.getElementById(subtotalId).textContent = "$" + subtotal;
+}
+
+function calculateTax(subtotalId, taxId, totalId) {
+    var subtotalElement = document.getElementById(subtotalId);
+    var subtotal = parseFloat(subtotalElement.textContent.replace('$', ''));
+    var tax = subtotal * 0.1; // Assuming 10% tax rate
+    document.getElementById(taxId).textContent = "$" + tax.toFixed(2);
     
-    var taxElement = document.getElementById(taxId);
-    var tax = subtotal * 0.05;
-    taxElement.textContent = "$" + tax.toFixed(2);
-    
-    var totalElement = document.getElementById(totalId);
     var total = subtotal + tax;
-    totalElement.textContent = "$" + total.toFixed(2);
+    document.getElementById(totalId).textContent = "$" + total.toFixed(2);
 }
