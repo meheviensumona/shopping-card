@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shopping Cart</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
+<style>
+  .product-container {
+    margin-bottom: 20px;
+  }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="row">
+    <div class="col-md-5 center-item product-container" id="product1">
+      <div class="input-group number-spinner">
+        <button class="btn btn-default" onclick="decrementQuantity('quantity1', 'price1', 'subtotal')"><i class="fas fa-minus"></i></button>
+        <input type="number" min="0" class="form-control text-center" id="quantity1" value="1" onchange="updatePrice('quantity1', 'price1', 'subtotal')">
+        <button class="btn btn-default" onclick="incrementQuantity('quantity1', 'price1', 'subtotal')" ><i class="fas fa-plus"></i></button>
+      </div>
+      <h5 id="price1" class="productPrice">$1200</h5>
+      <button class="btn btn-danger" onclick="removeProduct('product1', 'subtotal')">Delete</button>
+    </div>
+    
+    <div class="col-md-5 center-item product-container" id="product2">
+      <div class="input-group number-spinner">
+        <button class="btn btn-default" onclick="decrementQuantity('quantity2', 'price2', 'subtotal')"><i class="fas fa-minus"></i></button>
+        <input type="number" min="0" class="form-control text-center" id="quantity2" value="1" onchange="updatePrice('quantity2', 'price2', 'subtotal')">
+        <button class="btn btn-default" onclick="incrementQuantity('quantity2', 'price2', 'subtotal')" ><i class="fas fa-plus"></i></button>
+      </div>
+      <h5 id="price2" class="productPrice">$1500</h5>
+      <button class="btn btn-danger" onclick="removeProduct('product2', 'subtotal')">Delete</button>
+    </div>
+  </div>
+  <div class="row mt-4">
+    <div class="col-md-12">
+      <h4 id="subtotal">Subtotal: $2700</h4>
+    </div>
+  </div>
+</div>
+
+<script>
+function decrementQuantity(inputId, priceId, subtotalId) {
+    var inputElement = document.getElementById(inputId);
+    var currentValue = parseInt(inputElement.value);
+    if (currentValue > 0) {
+        inputElement.value = currentValue - 1;
+        updatePrice(inputId, priceId, subtotalId);
+    }
+}
+
+function incrementQuantity(inputId, priceId, subtotalId) {
+    var inputElement = document.getElementById(inputId);
+    var currentValue = parseInt(inputElement.value);
+    inputElement.value = currentValue + 1;
+    updatePrice(inputId, priceId, subtotalId);
+}
+
+function updatePrice(inputId, priceId, subtotalId) {
+    var inputElement = document.getElementById(inputId);
+    var quantity = parseInt(inputElement.value);
+    var priceElement = document.getElementById(priceId);
+    var unitPrice = (priceId === 'price1') ? 1200 : 1500; // Adjust this value to the actual unit price
+    var totalPrice = quantity * unitPrice;
+    priceElement.textContent = "$" + totalPrice;
+
+    updateSubtotal(subtotalId);
+}
+
+function updateSubtotal(subtotalId) {
+    var subtotalElement = document.getElementById(subtotalId);
+    var products = document.querySelectorAll('.productPrice');
+    var subtotal = 0;
+    products.forEach(function(product) {
+        subtotal += parseFloat(product.textContent.replace("$", ""));
+    });
+    subtotalElement.textContent = "Subtotal: $" + subtotal.toFixed(2);
+}
+
+function removeProduct(productId, subtotalId) {
+    var productElement = document.getElementById(productId);
+    productElement.parentNode.removeChild(productElement);
+    updateSubtotal(subtotalId);
+}
+</script>
+
+</body>
+</html>
