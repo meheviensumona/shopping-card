@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Shopping Cart</h2>
+        <div class="row">
+            <!-- Product 1 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Product 1</h5>
+                        <p class="card-text">Price: <span id="price1">$100</span></p>
+                        <div class="form-group">
+                            <label for="quantity1">Quantity:</label>
+                            <button class="btn btn-secondary" onclick="decrementQuantity('quantity1')">-</button>
+                            <input type="number" id="quantity1" class="form-control" value="1" min="1">
+                            <button class="btn btn-secondary" onclick="incrementQuantity('quantity1')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 2 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Product 2</h5>
+                        <p class="card-text">Price: <span id="price2">$200</span></p>
+                        <div class="form-group">
+                            <label for="quantity2">Quantity:</label>
+                            <button class="btn btn-secondary" onclick="decrementQuantity('quantity2')">-</button>
+                            <input type="number" id="quantity2" class="form-control" value="1" min="1">
+                            <button class="btn btn-secondary" onclick="incrementQuantity('quantity2')">+</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <button class="btn btn-primary" onclick="calculateTotal()">Calculate Total</button>
+                <h4>Total: $<span id="total">0</span></h4>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Function to decrement quantity
+        function decrementQuantity(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let currentValue = parseInt(inputElement.value);
+            if (currentValue > 1) {
+                inputElement.value = currentValue - 1;
+                updatePrice(inputId);
+            }
+        }
+
+        // Function to increment quantity
+        function incrementQuantity(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let currentValue = parseInt(inputElement.value);
+            inputElement.value = currentValue + 1;
+            updatePrice(inputId);
+        }
+
+        // Function to update price
+        function updatePrice(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let quantity = parseInt(inputElement.value);
+            let priceElement = document.getElementById('price' + inputId.slice(-1));
+            let price = 100 * (inputId === 'quantity2' ? 2 : 1); // Assuming product 1 is $100 and product 2 is $200
+            priceElement.textContent = "$" + (price * quantity);
+        }
+
+        // Function to calculate total
+        function calculateTotal() {
+            let quantity1 = parseInt(document.getElementById('quantity1').value);
+            let quantity2 = parseInt(document.getElementById('quantity2').value);
+            let price1 = parseInt(document.getElementById('price1').textContent.slice(1));
+            let price2 = parseInt(document.getElementById('price2').textContent.slice(1));
+            let total = (quantity1 * price1) + (quantity2 * price2);
+            document.getElementById('total').textContent = total;
+        }
+    </script>
+</body>
+</html>

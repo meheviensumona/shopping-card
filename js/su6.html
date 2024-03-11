@@ -1,0 +1,134 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Shopping Cart</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <style>
+        .container {
+            margin-top: 50px;
+        }
+        .card {
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h2>My Shopping Cart</h2>
+        <div class="row">
+            <!-- Product 1 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Product 1</h5>
+                        <p class="card-text">Price: <span id="price1">$100</span></p>
+                        <div class="form-group">
+                            <label for="quantity1">Quantity:</label>
+                            <button class="btn btn-secondary" onclick="decrementQuantity('quantity1')">-</button>
+                            <input type="number" id="quantity1" class="form-control" value="1" min="1">
+                            <button class="btn btn-secondary" onclick="incrementQuantity('quantity1')">+</button>
+                            <button class="btn btn-danger" onclick="removeProduct('quantity1')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <!-- Product 2 -->
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-body">
+                        <h5 class="card-title">Product 2</h5>
+                        <p class="card-text">Price: <span id="price2">$200</span></p>
+                        <div class="form-group">
+                            <label for="quantity2">Quantity:</label>
+                            <button class="btn btn-secondary" onclick="decrementQuantity('quantity2')">-</button>
+                            <input type="number" id="quantity2" class="form-control" value="1" min="1">
+                            <button class="btn btn-secondary" onclick="incrementQuantity('quantity2')">+</button>
+                            <button class="btn btn-danger" onclick="removeProduct('quantity2')">Delete</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row mt-4">
+            <div class="col-md-12">
+                <button class="btn btn-primary" onclick="calculateTotal()">Calculate Total</button>
+                <h4>Subtotal: $<span id="subtotal">0</span></h4>
+                <h4>Tax: $<span id="tax">0</span></h4>
+                <h4>Total: $<span id="total">0</span></h4>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        let previousQuantity = {}; // Object to store previous quantities
+
+        // Function to decrement quantity
+        function decrementQuantity(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let currentValue = parseInt(inputElement.value);
+            if (currentValue > 1) {
+                inputElement.value = currentValue - 1;
+                updatePrice(inputId);
+            }
+        }
+
+        // Function to increment quantity
+        function incrementQuantity(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let currentValue = parseInt(inputElement.value);
+            inputElement.value = currentValue + 1;
+            updatePrice(inputId);
+        }
+
+        // Function to remove product
+        function removeProduct(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let previousValue = previousQuantity[inputId];
+            if (previousValue !== undefined) {
+                inputElement.value = previousValue; // Restore the previous quantity
+                updatePrice(inputId);
+            }
+        }
+
+        // Function to update price
+        function updatePrice(inputId) {
+            let inputElement = document.getElementById(inputId);
+            let quantity = parseInt(inputElement.value);
+            let priceElement = document.getElementById('price' + inputId.slice(-1));
+            let price = parseInt(priceElement.textContent.slice(1)); // Get the product price
+            priceElement.textContent = "$" + (price * quantity);
+
+            // Store the current quantity as previous quantity
+            previousQuantity[inputId] = quantity;
+
+            calculateTotal();
+        }
+
+        // Function to calculate total
+        function calculateTotal() {
+            let subtotal = 0;
+            let tax = 0;
+
+            // Calculate subtotal
+            for (let i = 1; i <= 2; i++) {
+                let quantity = parseInt(document.getElementById('quantity' + i).value);
+                let price = parseInt(document.getElementById('price' + i).textContent.slice(1));
+                subtotal += quantity * price;
+            }
+
+            // Calculate tax (assuming 5% tax rate)
+            tax = subtotal * 0.05;
+
+            // Calculate total
+            let total = subtotal + tax;
+
+            // Display values
+            document.getElementById('subtotal').textContent = subtotal;
+            document.getElementById('tax').textContent = tax.toFixed(2);
+            document.getElementById('total').textContent = total.toFixed(2);
+        }
+    </script>
+</body>
+</html>
